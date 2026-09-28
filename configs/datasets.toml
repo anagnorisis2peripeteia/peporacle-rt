@@ -1,0 +1,38 @@
+# Retention-time datasets. `csv` is relative to the data directory (see data/README.md).
+# Only hela_mod encodes modified residues as digits (see peporacle.sequences.HELA_DIGIT_MAP).
+
+[hela_mod3]
+csv = "hela_mod3.csv"
+digit_map = false
+
+[hela_mod]
+csv = "hela_mod.csv"
+digit_map = true
+
+[yeast_unmod]
+csv = "yeast_unmod.csv"
+digit_map = false
+
+[scx]
+csv = "scx.csv"
+digit_map = false
+
+[luna_hilic]
+csv = "luna_hilic.csv"
+digit_map = false
+
+[luna_silica]
+csv = "luna_silica.csv"
+digit_map = false
+
+[atlantis_silica]
+csv = "atlantis_silica.csv"
+digit_map = false
+
+[xbridge_amide]
+csv = "xbridge_amide.csv"
+digit_map = false
+
+[misc_dia]
+csv = "misc_dia.csv"
+digit_map = false

@@ -1,0 +1,18 @@
+# Frozen atomic-attention configuration: trial 11 of the tuning search
+# (results/tuning/). Searched values are copied at full precision from the
+# trial record; batch_size was fixed at 32 before tuning and not searched.
+
+[model]
+hidden_dim = 128
+n_blocks = 15
+n_heads = 4
+dropout = 0.05939927233834676
+
+[train]
+lr = 0.00015364319684424204
+weight_decay = 0.0006067936172511789
+batch_size = 32
+grad_accum = 4
+grad_clip = 9.987906053990434
+warmup_epochs = 12
+epochs = 100

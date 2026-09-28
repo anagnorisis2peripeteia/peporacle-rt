@@ -1,0 +1,10 @@
+dataset,n_seeds,test_r2_mean,test_r2_sd,test_mae_mean,run_hours_mean
+hela_mod3,3,0.961767,0.0087,,0.1
+hela_mod,3,0.9585,0.006861,,0.27
+yeast_unmod,3,0.9644,0.002007,,1.03
+scx,3,0.994723,0.00079,,2.2
+luna_hilic,3,0.982588,3.3e-05,0.6376,2.55
+luna_silica,3,0.982389,0.000491,0.559,2.63
+atlantis_silica,3,0.980335,0.000384,0.5644,2.79
+xbridge_amide,3,0.986183,0.00031,0.6429,2.92
+misc_dia,3,0.97798,0.000627,275.4024,10.38

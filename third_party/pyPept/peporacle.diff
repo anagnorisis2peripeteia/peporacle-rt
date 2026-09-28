@@ -1,0 +1,60 @@
+--- a/src/pyPept/molecule.py
++++ b/src/pyPept/molecule.py
+@@ -51,6 +51,7 @@
+         self.offset = []
+         self.bondlist = []
+         self.monomers = []
++        self.unsanitized_mol = None
+         if depiction not in ('rdkit', 'local'):
+             raise ValueError(
+                 f"Depiction was {depiction}, expected 'rdkit' or 'local'.")
+@@ -242,6 +243,9 @@
+ 
+         # Step3: remove the Rgroups
+         self.mol = Chem.DeleteSubstructs(self.mol, Chem.MolFromSmarts('[#0]'))
++
++        # Keep the assembled molecule as it was before sanitization
++        self.unsanitized_mol = Chem.Mol(self.mol)
+ 
+         # Step 4: sanitize and generate 2D coords
+         Chem.SanitizeMol(self.mol)
+--- a/src/pyPept/sequence.py
++++ b/src/pyPept/sequence.py
+@@ -28,6 +28,7 @@
+ import string
+ from collections import defaultdict
+ from importlib.resources import files
++from pathlib import Path
+ 
+ # Third-party libraries
+ import numpy as np
+@@ -95,7 +96,10 @@
+ 
+         # Read the monomer dictionary
+         default_monomer_df_filepath = files(SequenceConstants.def_path).joinpath(SequenceConstants.def_lib_filename)
+-        monomer_df_filepath = files(path).joinpath(monomer_lib)
++        if os.path.isdir(path):
++            monomer_df_filepath = Path(path, monomer_lib)
++        else:
++            monomer_df_filepath = files(path).joinpath(monomer_lib)
+ 
+         if monomer_df_filepath.is_file() is False:
+             monomer_df_filepath = default_monomer_df_filepath
+@@ -525,6 +529,8 @@
+     df_group = PandasTools.LoadSDF(sdf_file)
+ 
+     groups = ['m_Rgroups', 'm_RgroupIdx', 'm_attachmentPointIdx']
++    # pandas >= 3 infers a string dtype; list-valued cells need object columns
++    df_group[groups] = df_group[groups].astype(object)
+     for idx in df_group.index:
+         for group in groups:
+             change = df_group[group][idx].split(SequenceConstants.csv_separator)
+@@ -533,7 +539,7 @@
+             else:
+                 updated_change = [None if v == 'None' else int(v) for v in
+                                   change]
+-            df_group.loc[idx, group] = updated_change
++            df_group.at[idx, group] = updated_change
+     df_group = df_group.set_index('symbol')
+     df_group = df_group.rename(columns={"ROMol": "m_romol"})
+ 

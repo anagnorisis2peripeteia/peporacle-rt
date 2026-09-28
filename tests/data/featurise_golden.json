@@ -1,0 +1,112 @@
+{
+ "monomer_sdf_sha256": "3204432d23fa08834e3c2f2d4f390c3988d131a2b87e97b55a04a895c86d50cf",
+ "node_dim": 88,
+ "edge_dim": 12,
+ "graphs": [
+  {
+   "dataset": "hela_mod",
+   "sequence": "NNQET1IK",
+   "digit_map": "hela",
+   "sha256": "74459c506334cee5c7bd4dbfad2c9277104c553c6d621cbfe6850e2071f90cdc",
+   "num_residues": 8,
+   "num_atoms": 68,
+   "num_edges": 134,
+   "sha256_portable": "18890218990a31b4b3b969e0d6a1ee3dd838dc97c5c8e1cb86a434c2de80b666"
+  },
+  {
+   "dataset": "hela_mod",
+   "sequence": "2GIQFLK",
+   "digit_map": "hela",
+   "sha256": "297327a36a81688920f79d43e478b7a0cfc9f07314cfdd91d5e4c609e8612c43",
+   "num_residues": 7,
+   "num_atoms": 60,
+   "num_edges": 120,
+   "sha256_portable": "80d605e9bb3d7d26e9ed3eaefd5ffffa81981558ca43c930020d436c9dcd0b3b"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "VDSDDQWGEYSCVFLPEPMGTANIQLHGPPR",
+   "digit_map": null,
+   "sha256": "ecd0223fd0d612fc91285be559dc9a96558e0d6436d5a58b7b150ad715b93345",
+   "num_residues": 31,
+   "num_atoms": 243,
+   "num_edges": 502,
+   "sha256_portable": "4d47cece143f6a18ddff68e0d1a0aa90d7973a4f67fd691646a2b1a2d74cdd0d"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "EGLELLK",
+   "digit_map": null,
+   "sha256": "108c4043a4cecf38c3ae39a6978778eb7b490095d84233722c379b7fc860bd61",
+   "num_residues": 7,
+   "num_atoms": 56,
+   "num_edges": 110,
+   "sha256_portable": "b32327677c986a3b490348d544d0da633a0baaf4ed1e3ea4127bb602d55ed362"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "NNLIQQK",
+   "digit_map": null,
+   "sha256": "47204880fa8ca3cfaa7dc3cf5f2e078c6ec5521882861e8196fb29b2d3fa3ec5",
+   "num_residues": 7,
+   "num_atoms": 60,
+   "num_edges": 118,
+   "sha256_portable": "e341c89b382e21628dcccc7c22082c3d9d6d3b2d4b701dea406315f5a8912251"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "QVEIAQR",
+   "digit_map": null,
+   "sha256": "014def5a7b86bf337147006d4d77fd382293f268358f2fb0127e8ffc6535f311",
+   "num_residues": 7,
+   "num_atoms": 59,
+   "num_edges": 116,
+   "sha256_portable": "b6e3d648f243ad1135655ab059b8850699914b2a97c064a4fd37867d4345c80b"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "DGVTVAK",
+   "digit_map": null,
+   "sha256": "2f92b59cf76e485ba7771b1f3b55ed7a4fac5be1810da55a86b74bf7b9061e02",
+   "num_residues": 7,
+   "num_atoms": 48,
+   "num_edges": 94,
+   "sha256_portable": "e1b3df543e051875c2b7a5661a86d43551dc10714fd2ff98a66441734aedbc59"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "MQASIEK",
+   "digit_map": null,
+   "sha256": "ccea40bcf9178f93c85d0ffce8d442066c61a3e57274bd2070d36d2a09f618ba",
+   "num_residues": 7,
+   "num_atoms": 55,
+   "num_edges": 108,
+   "sha256_portable": "1d4c771e82da2f43cbaed8eeea4accdcfe0ea4980bc5cda4bc13b40783ac2610"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "NNLLTNK",
+   "digit_map": null,
+   "sha256": "bfada040d9b4dee16277f3a937302353c7ffbf6eb971e258f564b70e4b77ada5",
+   "num_residues": 7,
+   "num_atoms": 57,
+   "num_edges": 112,
+   "sha256_portable": "772f54913ad4aba4d425d75c9c51e1deb71909b39f4a1489ea90105e2253ed2e"
+  },
+  {
+   "dataset": "hela_mod3",
+   "sequence": "VTQDELK",
+   "digit_map": null,
+   "sha256": "94108e7cbe50a35c1bf35ef065bdb0548580219b11b381400fe55e92d6ee2218",
+   "num_residues": 7,
+   "num_atoms": 58,
+   "num_edges": 114,
+   "sha256_portable": "beda913ccdd3ba044ad853756046861cbe2e66c85f0c3f5b1a5f7d616c7e811d"
+  }
+ ],
+ "geometry_edge_features": [
+  "length",
+  "length_3d"
+ ],
+ "built_on": "Darwin arm64"
+}

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "peporacle"
+version = "0.1.0"
+description = "Atom-level attention for peptide retention-time prediction"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy==2.5.3",
+    "pandas==3.0.6",
+    "scikit-learn==1.9.1",
+    "scipy==1.18.1",
+    "optuna==5.0.0",
+    "rdkit==2026.3.1",
+    "torch==2.11.0",
+    "torch-geometric==2.8.0.post1",
+    "pypept",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "ruff==0.16.9"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["third_party"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RET", "ARG", "C4", "PL"]
+ignore = ["PLR0913"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["peporacle"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["PLR2004"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
