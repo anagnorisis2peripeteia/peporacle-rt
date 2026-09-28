@@ -30,8 +30,10 @@ Training times are on one NVIDIA RTX 5070 (12 GB). The per-run records are in
 
 ## Method
 
-**Graphs.** Sequences are assembled atom by atom with [pyPept](https://github.com/Boehringer-Ingelheim/pyPept)
-and RDKit (`peporacle.featurise`). Each heavy atom gets 88 features: element, charge
+**Graphs.** A [patched copy](third_party/pyPept/PATCHES.md) of
+[pyPept](https://github.com/Boehringer-Ingelheim/pyPept) assembles peptide molecules from
+monomer structures. PepOracle computes graph features using RDKit (`peporacle.featurise`).
+Each heavy atom gets 88 features: element, charge
 (formal and Gasteiger), hybridisation, ring membership, hydrogen-bonding and hydrophobicity
 descriptors, and the position and properties of the residue it belongs to. The full list is
 `peporacle.featurise.NODE_FEATURES`. Bonds are stored with 12 features for use by other
@@ -120,3 +122,7 @@ tools/          checks against the original scripts
 See [`CITATION.cff`](CITATION.cff). The code is MIT-licensed; pyPept is MIT-licensed by
 Boehringer Ingelheim. The datasets are not included; their sources, which should be cited
 when the data are used, are listed in [`data/README.md`](data/README.md).
+
+pyPept: Ochoa R, Brown JB, Fox T (2023).
+[pyPept: a python library to generate atomistic 2D and 3D representations of peptides](https://doi.org/10.1186/s13321-023-00748-2).
+*Journal of Cheminformatics* 15, 79.
