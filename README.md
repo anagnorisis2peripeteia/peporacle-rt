@@ -87,23 +87,6 @@ a few hours on 8 CPU cores; the whole sweep took 75 hours (about 3 days) on one 
 that also drives a display, `--gpu-memory-fraction 0.65` keeps PyTorch from holding memory
 up to the card's limit.
 
-## Limitations
-
-- The reported runs were unseeded and used early stopping (patience 50). These scripts seed
-  each run and train for 100 epochs, so exact reproduction of the reported values is not expected.
-- Three seeds per dataset. On the two HeLa sets (117 and 342 test peptides) the spread is
-  dominated by which peptides are in the test set.
-- One configuration, tuned on Misc only, is applied to every dataset.
-- Atoms are assigned to residues by substructure matching. For 72% of peptides some atoms are
-  instead assigned from their neighbours or by position, so the residue-level atom features
-  are approximate.
-- The published caches were built on Apple silicon. The two bond-length columns (`length`,
-  `length_3d`) come from 2D depiction coordinates, whose last bits can depend on the CPU
-  architecture: an earlier check on x86 found differences there in some graphs, although the
-  10 golden test graphs match bit for bit on x86. The tests therefore check those two columns
-  exactly only on Apple silicon and every other feature exactly everywhere. Atomic attention
-  does not read bond features, so its results are unaffected.
-
 ## Layout
 
 ```
