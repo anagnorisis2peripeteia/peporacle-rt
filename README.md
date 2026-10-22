@@ -28,6 +28,26 @@ peptides as its test set, so the spread includes which peptides land in the test
 Training times are on one NVIDIA RTX 5070 (12 GB). The per-run records are in
 [`results/atomic_attention/`](results/atomic_attention/).
 
+## Operator comparison
+
+The same nine datasets and seeds with five message-passing operators in place of atomic
+attention (15 layers, same frozen settings, no attention). Test R², mean ± SD over 3 seeds:
+
+| dataset | atomic attention | TransformerConv | GCNConv | SAGEConv | ARMAConv | NNConv |
+|---|---:|---:|---:|---:|---:|---:|
+| HeLa | 0.9618 ± 0.0087 | 0.8864 ± 0.0267 | 0.9114 ± 0.0072 | 0.9277 ± 0.0153 | 0.9173 ± 0.0230 | 0.9176 ± 0.0080 |
+| HeLa, modified | 0.9585 ± 0.0069 | 0.8654 ± 0.0363 | 0.8909 ± 0.0243 | 0.9359 ± 0.0058 | 0.9233 ± 0.0131 | 0.8994 ± 0.0139 |
+| Yeast | 0.9644 ± 0.0020 | 0.9501 ± 0.0037 | 0.9495 ± 0.0064 | 0.9536 ± 0.0048 | 0.9660 ± 0.0026 | 0.9537 ± 0.0076 |
+| SCX | 0.9947 ± 0.0008 | 0.9553 ± 0.0045 | 0.9170 ± 0.0101 | 0.9921 ± 0.0007 | 0.9751 ± 0.0019 | 0.9090 ± 0.0102 |
+| Luna HILIC | 0.9826 ± <0.0001 | 0.9850 ± 0.0007 | 0.9837 ± 0.0008 | 0.9801 ± 0.0007 | 0.9871 ± 0.0006 | 0.9835 ± 0.0013 |
+| Luna Silica | 0.9824 ± 0.0005 | 0.9815 ± 0.0009 | 0.9806 ± 0.0013 | 0.9780 ± 0.0003 | 0.9832 ± 0.0014 | 0.9762 ± 0.0019 |
+| Atlantis Silica | 0.9803 ± 0.0004 | 0.9769 ± 0.0011 | 0.9779 ± 0.0028 | 0.9762 ± 0.0008 | 0.9828 ± 0.0011 | 0.9732 ± 0.0025 |
+| XBridge Amide | 0.9862 ± 0.0003 | 0.9885 ± 0.0015 | 0.9878 ± 0.0004 | 0.9836 ± 0.0010 | 0.9912 ± 0.0005 | 0.9894 ± 0.0002 |
+| Misc | 0.9780 ± 0.0006 | 0.9869 ± 0.0009 | 0.9742 ± 0.0006 | 0.9637 ± 0.0005 | 0.9905 ± 0.0005 | 0.9841 ± 0.0009 |
+
+Models, protocol and the paired comparisons with atomic attention are in
+[`results/operator_ablation/`](results/operator_ablation/).
+
 ## Method
 
 **Graphs.** A [patched copy](third_party/pyPept/PATCHES.md) of
@@ -94,7 +114,7 @@ configs/        frozen configuration and dataset list
 data/           dataset sources, citations and checksums (CSVs are downloaded)
 scripts/        the steps above
 src/peporacle/  featurise/ (sequence -> graph), cache, data, model, train, tune, sweep
-results/        published runs (atomic_attention/), tuning record (tuning/)
+results/        published runs (atomic_attention/, operator_ablation/), tuning record (tuning/)
 tests/          unit tests, including golden graphs from the published caches
 third_party/    pyPept (MIT, Boehringer Ingelheim) with the patches in PATCHES.md
 tools/          checks against the original scripts
