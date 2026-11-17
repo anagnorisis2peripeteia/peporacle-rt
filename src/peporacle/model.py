@@ -50,19 +50,28 @@ class AtomicAttention(nn.Module):
         self.blocks = nn.ModuleList(
             AttentionBlock(d, cfg.n_heads, cfg.dropout) for _ in range(cfg.n_blocks)
         )
-        self.head = nn.Sequential(
-            nn.Linear(2 * d, 64),
-            nn.GELU(),
-            nn.Dropout(cfg.dropout),
-            nn.Linear(64, 32),
-            nn.GELU(),
-            nn.Dropout(cfg.dropout),
-            nn.Linear(32, 1),
-        )
+        self.head = prediction_head(d, cfg.dropout)
 
     def forward(self, data: Batch) -> torch.Tensor:
         h = self.input_proj(data.x)
         for block in self.blocks:
             h = block(h, data.batch)
-        pooled = torch.cat([global_mean_pool(h, data.batch), global_max_pool(h, data.batch)], -1)
-        return self.head(pooled).squeeze(-1)
+        return predict_from_atoms(self.head, h, data.batch)
+
+
+def prediction_head(dim: int, dropout: float) -> nn.Sequential:
+    """MLP from the pooled atom states (mean and max, ``2 * dim``) to one value."""
+    return nn.Sequential(
+        nn.Linear(2 * dim, 64),
+        nn.GELU(),
+        nn.Dropout(dropout),
+        nn.Linear(64, 32),
+        nn.GELU(),
+        nn.Dropout(dropout),
+        nn.Linear(32, 1),
+    )
+
+
+def predict_from_atoms(head: nn.Module, h: torch.Tensor, batch: torch.Tensor) -> torch.Tensor:
+    pooled = torch.cat([global_mean_pool(h, batch), global_max_pool(h, batch)], -1)
+    return head(pooled).squeeze(-1)

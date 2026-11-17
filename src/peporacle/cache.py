@@ -210,6 +210,10 @@ class GraphCache:
     def node_dim(self) -> int:
         return int(self.manifest["node_dim"])
 
+    @property
+    def edge_dim(self) -> int:
+        return int(self.manifest["edge_dim"])
+
     def __getitem__(self, i: int) -> Data:
         n0, n1 = int(self._node_off[i]), int(self._node_off[i + 1])
         e0, e1 = int(self._edge_off[i]), int(self._edge_off[i + 1])

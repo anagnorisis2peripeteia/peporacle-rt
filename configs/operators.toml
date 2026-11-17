@@ -1,0 +1,16 @@
+# Comparison models (peporacle.operators): one of five PyTorch Geometric operators in place
+# of atomic attention (operator_ablation) or in front of it (operator_attention). Width,
+# heads, dropout and every training setting come from frozen.toml; nothing here was tuned.
+
+operators = ["TransformerConv", "GCNConv", "SAGEConv", "ARMAConv", "NNConv"]
+n_layers = 15
+
+[attention_blocks]
+operator_ablation = 0
+operator_attention = 5
+
+# Under a 65% memory cap on a 12 GB card NNConv does not fit a batch of 32. The published
+# runs used these micro-batches; gradient accumulation keeps 128 peptides per update.
+[micro_batch.NNConv]
+default = 8
+misc_dia = 4

@@ -4,6 +4,7 @@ __pycache__/
 caches/
 data/*.csv
 results/sweep/checkpoints/
+results/sweep_*/checkpoints/
 results/tuning/study.db
 .pytest_cache/
 .ruff_cache/

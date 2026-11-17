@@ -10,7 +10,8 @@ import argparse
 import logging
 from pathlib import Path
 
-from peporacle.config import load_datasets, load_frozen
+from peporacle.config import as_dict, load_datasets, load_frozen
+from peporacle.model import AtomicAttention
 from peporacle.sweep import sweep
 from peporacle.train import select_device
 
@@ -28,7 +29,8 @@ sweep(
     ROOT / "caches",
     datasets=args.datasets or list(load_datasets(ROOT / "configs" / "datasets.toml")),
     seeds=args.seeds,
-    model_cfg=model_cfg,
+    build_model=lambda cache: AtomicAttention(cache.node_dim, model_cfg),
+    model_config=as_dict(model_cfg),
     train_cfg=train_cfg,
     out_dir=ROOT / "results" / "sweep",
     device=select_device(args.gpu_memory_fraction),

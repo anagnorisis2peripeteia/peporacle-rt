@@ -4,5 +4,5 @@ title: "PepOracle: atomic attention for peptide retention time"
 authors:
   - family-names: Beeley
     given-names: Cameron A.
-version: 0.1.0
+version: 0.2.0
 license: MIT

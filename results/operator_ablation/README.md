@@ -32,8 +32,11 @@ cap NNConv does not fit a batch of 32, so it used micro-batches of 8 (4 on Misc)
 (32) accumulation steps; every model updates once per 128 peptides. The
 `batch_size` and `grad_accum` columns record this per run.
 
-These runs used the original research scripts; the operator models are not yet part of
-`peporacle`.
+The models are `peporacle.operators.OperatorModel` with no attention blocks, and
+`python scripts/sweep_operators.py operator_ablation` reruns them. The published runs came
+from the original research scripts; `tools/check_operators_against_asrun.py` loads each
+original model's weights into `OperatorModel` and checks that the predictions, and the
+weights after a training epoch, are bit-identical.
 
 ## Files
 

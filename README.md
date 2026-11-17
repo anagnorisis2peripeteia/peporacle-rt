@@ -5,8 +5,9 @@ peptide is turned into a graph of heavy atoms with 88 features per atom, and a t
 lets every atom attend to every other atom in the peptide ("atomic attention"). There is
 no message passing along bonds.
 
-This repository contains the graph builder, hyperparameter search, and a sweep that trains
-one frozen configuration on nine datasets with three seeds each.
+This repository contains the graph builder, hyperparameter search, a sweep that trains
+one frozen configuration on nine datasets with three seeds each, and the message-passing
+models it is compared with.
 
 ## Results
 
@@ -48,6 +49,26 @@ attention (15 layers, same frozen settings, no attention). Test R², mean ± SD 
 Models, protocol and the paired comparisons with atomic attention are in
 [`results/operator_ablation/`](results/operator_ablation/).
 
+## Operator + attention
+
+The same five operators, each followed by 5 atomic-attention blocks (15 operator layers, then
+5 attention blocks, same frozen settings). Test R², mean ± SD over 3 seeds:
+
+| dataset | atomic attention | TransformerConv | GCNConv | SAGEConv | ARMAConv | NNConv |
+|---|---:|---:|---:|---:|---:|---:|
+| HeLa | 0.9618 ± 0.0087 | 0.9542 ± 0.0134 | 0.9576 ± 0.0119 | 0.9633 ± 0.0055 | 0.9460 ± 0.0261 | 0.9515 ± 0.0067 |
+| HeLa, modified | 0.9585 ± 0.0069 | 0.9527 ± 0.0056 | 0.9583 ± 0.0062 | 0.9581 ± 0.0057 | 0.9407 ± 0.0131 | 0.9515 ± 0.0038 |
+| Yeast | 0.9644 ± 0.0020 | 0.9679 ± 0.0032 | 0.9662 ± 0.0023 | 0.9640 ± 0.0037 | 0.9716 ± 0.0011 | 0.9691 ± 0.0032 |
+| SCX | 0.9947 ± 0.0008 | 0.9947 ± 0.0004 | 0.9945 ± 0.0006 | 0.9953 ± 0.0003 | 0.9950 ± 0.0003 | 0.9937 ± 0.0006 |
+| Luna HILIC | 0.9826 ± <0.0001 | 0.9873 ± 0.0012 | 0.9854 ± 0.0006 | 0.9835 ± 0.0005 | 0.9885 ± 0.0002 | 0.9859 ± 0.0006 |
+| Luna Silica | 0.9824 ± 0.0005 | 0.9855 ± 0.0006 | 0.9849 ± 0.0007 | 0.9829 ± 0.0004 | 0.9867 ± 0.0005 | 0.9854 ± 0.0006 |
+| Atlantis Silica | 0.9803 ± 0.0004 | 0.9850 ± 0.0009 | 0.9829 ± 0.0023 | 0.9809 ± 0.0008 | 0.9861 ± 0.0006 | 0.9836 ± 0.0009 |
+| XBridge Amide | 0.9862 ± 0.0003 | 0.9914 ± 0.0004 | 0.9898 ± 0.0008 | 0.9868 ± 0.0005 | 0.9927 ± 0.0003 | 0.9905 ± 0.0001 |
+| Misc | 0.9780 ± 0.0006 | 0.9894 ± 0.0007 | 0.9826 ± 0.0010 | 0.9777 ± 0.0006 | 0.9920 ± 0.0008 | 0.9842 ± 0.0015 |
+
+Models, protocol and the paired comparisons with atomic attention and with each operator alone
+are in [`results/operator_attention/`](results/operator_attention/).
+
 ## Method
 
 **Graphs.** A [patched copy](third_party/pyPept/PATCHES.md) of
@@ -74,6 +95,14 @@ accumulation, gradient clipping, and a learning rate that warms up linearly from
 12 epochs and then follows a cosine decay. The test score uses the weights from the epoch
 with the best validation R².
 
+**Operator models** (`peporacle.operators`). Five PyTorch Geometric operators
+(TransformerConv, GCNConv, SAGEConv, ARMAConv, NNConv), each as 15 layers on the same atom
+embedding, pooling and head, with no attention blocks (operator ablation) or 5 attention
+blocks after them (operator + attention). TransformerConv and NNConv read the 12 bond
+features; the others use only which atoms are bonded. They use the frozen settings
+unchanged; [`configs/operators.toml`](configs/operators.toml) lists the few settings of
+their own.
+
 **Tuning** (`peporacle.tune`). One configuration is used for every dataset. It was chosen
 by a 20-trial Optuna search on a fixed random subset of 10,000 peptides from Misc. Each trial
 trained 100 epochs and was scored on the subset's validation split with its final-epoch
@@ -97,24 +126,37 @@ Then run the steps in order:
 python scripts/download_data.py     # the nine dataset CSVs -> data/ (checksum-verified)
 python scripts/build_caches.py      # CSVs -> graph caches in caches/ (resumable)
 python scripts/tune.py              # optional: repeat the 20-trial search
-python scripts/sweep.py             # frozen config x 9 datasets x seeds 0-2 -> results/sweep/
-python scripts/summarise.py         # mean and SD per dataset -> results/summary.csv
+python scripts/sweep.py             # atomic attention x 9 datasets x seeds 0-2 -> results/sweep/
+python scripts/sweep_operators.py operator_ablation    # -> results/sweep_operator_ablation/
+python scripts/sweep_operators.py operator_attention   # -> results/sweep_operator_attention/
+python scripts/summarise.py         # runs.csv and summary.csv in each results/sweep*/
+python scripts/compare.py           # paired comparisons and verdicts, as in results/
 ```
 
-`sweep.py` and `tune.py` take dataset names, `--seeds` and `--trials` to run a subset; every
-run checkpoints each epoch and resumes after an interruption. Building all nine caches takes
-a few hours on 8 CPU cores; the whole sweep took 75 hours (about 3 days) on one RTX 5070. On a GPU
-that also drives a display, `--gpu-memory-fraction 0.65` keeps PyTorch from holding memory
-up to the card's limit.
+The sweeps take dataset names and `--seeds` (and `--operators` for the operator sweeps) to
+run a subset; every run checkpoints each epoch and resumes after an interruption. Building
+all nine caches takes a few hours on 8 CPU cores. On one RTX 5070 the atomic-attention sweep
+took 75 GPU hours, the operator ablation 425 and operator + attention 657; NNConv and
+ARMAConv account for most of the operator time. On a GPU that also drives a display,
+`--gpu-memory-fraction 0.65` keeps PyTorch from holding memory up to the card's limit; the
+published runs used it throughout.
+
+Seed *k* fixes the split, so a rerun has the same test peptides as the published runs. The
+scripts also seed the initial weights and batch order with *k*; the published runs did not,
+so rerun scores will differ from the published ones by run-to-run training variation.
+`python scripts/compare.py --published` rebuilds the paired comparisons in `results/` from
+the published `runs.csv` files.
 
 ## Layout
 
 ```
-configs/        frozen configuration and dataset list
+configs/        frozen configuration, operator settings and dataset list
 data/           dataset sources, citations and checksums (CSVs are downloaded)
 scripts/        the steps above
-src/peporacle/  featurise/ (sequence -> graph), cache, data, model, train, tune, sweep
-results/        published runs (atomic_attention/, operator_ablation/), tuning record (tuning/)
+src/peporacle/  featurise/ (sequence -> graph), cache, data, model, operators, train,
+                tune, sweep, results
+results/        published runs (atomic_attention/, operator_ablation/, operator_attention/),
+                tuning record (tuning/)
 tests/          unit tests, including golden graphs from the published caches
 third_party/    pyPept (MIT, Boehringer Ingelheim) with the patches in PATCHES.md
 tools/          checks against the original scripts
